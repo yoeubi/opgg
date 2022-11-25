@@ -14,7 +14,6 @@ const TierRankContainer = styled.span`
   line-height: normal;
   letter-spacing: -0.42px;
   color: #657070;
-  box-sizing: border-box;
   .season {
     font-weight: bold;
   }
