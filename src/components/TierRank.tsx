@@ -20,10 +20,9 @@ const TierRank = ({ season, tier }: IPreviousTiers) => {
         fontSize="11px"
         color="#657070"
       >
-        <Typography as="span" fontWeight="bold">
-          S
+        <Typography as="span" fontFamily="Helvetica" fontWeight="bold">
+          S{season}
         </Typography>
-        {season}
         &nbsp;{tier}
       </Typography>
     </TierRankContainer>

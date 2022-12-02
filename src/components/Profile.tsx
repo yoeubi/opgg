@@ -55,15 +55,7 @@ const ProfileContainer = styled.div`
         width: 42px;
         height: 22px;
         background-color: #2c3548;
-        font-family: Helvetica;
-        font-size: 14px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: normal;
-        letter-spacing: normal;
         text-align: center;
-        color: #eabd56;
         line-height: 22px;
         clip-path: polygon(
           15% 0%,
@@ -114,7 +106,12 @@ const Profile = ({ data: { summoner } }: Props) => {
           </div>
         </div>
         <div className="info">
-          <Typography className="name" fontSize="20px" color="#242929">
+          <Typography
+            className="name"
+            fontWeight="bold"
+            fontSize="20px"
+            color="#242929"
+          >
             {summoner.name}
           </Typography>
           <Typography className="rank" fontSize="11px" color="#657070">
