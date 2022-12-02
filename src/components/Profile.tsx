@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { ISummoner } from "../apis";
 import TierRank from "./TierRank";
+import Typography from "./Typography";
 
 const ProfileContainer = styled.div`
   padding: 15px;
@@ -77,25 +78,11 @@ const ProfileContainer = styled.div`
     .info {
       padding: 11px 0;
       .name {
-        font-family: AppleSDGothicNeo;
-        font-size: 20px;
-        font-weight: bold;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: normal;
         letter-spacing: -0.77px;
-        color: #242929;
         margin-bottom: 4px;
       }
       .rank {
-        font-family: AppleSDGothicNeo;
-        font-size: 11px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: normal;
         letter-spacing: -0.42px;
-        color: #657070;
       }
     }
   }
@@ -127,11 +114,20 @@ const Profile = ({ data: { summoner } }: Props) => {
           </div>
         </div>
         <div className="info">
-          <div className="name">{summoner.name}</div>
-          <div className="rank">
-            레더 랭킹 {summoner.ladderRank.rank}위 (상위{" "}
-            {summoner.ladderRank.rankPercentOfTop}%)
-          </div>
+          <Typography className="name" fontSize="20px" color="#242929">
+            {summoner.name}
+          </Typography>
+          <Typography className="rank" fontSize="11px" color="#657070">
+            레더 랭킹&nbsp;
+            <Typography as="span" fontFamily="Helvetica" fontWeight="bold">
+              {summoner.ladderRank.rank}
+            </Typography>
+            위 (상위
+            <Typography as="span" fontFamily="Helvetica">
+              {summoner.ladderRank.rankPercentOfTop}%
+            </Typography>
+            )
+          </Typography>
         </div>
       </div>
     </ProfileContainer>
