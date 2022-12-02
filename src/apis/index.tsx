@@ -26,18 +26,20 @@ export interface IPreviousTiers {
   tierRankPoint: number;
 }
 
+export interface ILeague {
+  hasResults: boolean;
+  losses: number;
+  tierRank: ITierRank;
+  wins: number;
+}
+
 export interface ISummoner {
   summoner: {
     ladderRank: {
       rank: number;
       rankPercentOfTop: number;
     };
-    leagues: {
-      hasResults: boolean;
-      losses: number;
-      tierRank: ITierRank;
-      wins: number;
-    }[];
+    leagues: ILeague[];
     level: number;
     name: string;
     previousTiers: IPreviousTiers[];
