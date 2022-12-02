@@ -154,11 +154,21 @@ export const RecentWinRate = ({
           {winRate}%
         </Typography>
         <div className="chart">
-          <Typography fontFamily="Helvetica" fontWeight="bold" color="#fff">
+          <Typography
+            fontFamily="Helvetica"
+            fontSize="12px"
+            fontWeight="bold"
+            color="#fff"
+          >
             {wins}
             <Typography as="span">승</Typography>
           </Typography>
-          <Typography fontFamily="Helvetica" fontWeight="bold" color="#fff">
+          <Typography
+            fontFamily="Helvetica"
+            fontSize="12px"
+            fontWeight="bold"
+            color="#fff"
+          >
             {losses}
             <Typography as="span">패</Typography>
           </Typography>
