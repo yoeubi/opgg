@@ -77,14 +77,14 @@ const WinRateList = ({ mostInfo: { champions, recentWinRate } }: Props) => {
       </div>
       {type === "champions" ? (
         <div>
-          {champions.map((champion) => (
-            <ChampionWinRate {...champion} />
+          {champions.map((champion, index) => (
+            <ChampionWinRate {...champion} key={index} />
           ))}
         </div>
       ) : (
         <div>
-          {recentWinRate.map((recent) => (
-            <RecentWinRate {...recent} />
+          {recentWinRate.map((recent, index) => (
+            <RecentWinRate {...recent} key={index} />
           ))}
         </div>
       )}

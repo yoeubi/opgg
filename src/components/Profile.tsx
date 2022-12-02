@@ -88,8 +88,8 @@ const Profile = ({ data: { summoner } }: Props) => {
   return (
     <ProfileContainer>
       <div className="seasons">
-        {summoner.previousTiers.map((tier) => (
-          <TierRank {...tier} />
+        {summoner.previousTiers.map((tier, index) => (
+          <TierRank key={index} {...tier} />
         ))}
       </div>
       <div className="profile">

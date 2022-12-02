@@ -36,6 +36,8 @@ const ChampionWinRateContainer = styled.div`
   }
 `;
 
+type ChampionWinRateProp = Omit<IChampions, "key">;
+
 const ChampionWinRate = ({
   imageUrl,
   name,
@@ -46,7 +48,7 @@ const ChampionWinRate = ({
   kills,
   assists,
   deaths,
-}: IChampions) => {
+}: ChampionWinRateProp) => {
   const winRate = calcWinRate(wins, losses);
   const kda = calcKDA(kills, assists, deaths);
   const kdaNumber = parseFloat(kda);
@@ -126,12 +128,14 @@ const RankWinRateContainer = styled.div`
   }
 `;
 
+type RecentWinRateProps = Omit<IRecentWinRate, "key">;
+
 export const RecentWinRate = ({
   imageUrl,
   name,
   wins,
   losses,
-}: IRecentWinRate) => {
+}: RecentWinRateProps) => {
   const winRate = calcWinRate(wins, losses);
   return (
     <RankWinRateContainer>
