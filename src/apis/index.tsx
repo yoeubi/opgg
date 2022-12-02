@@ -26,7 +26,7 @@ export interface IPreviousTiers {
   tierRankPoint: number;
 }
 
-export interface Summoner {
+export interface ISummoner {
   summoner: {
     ladderRank: {
       rank: number;

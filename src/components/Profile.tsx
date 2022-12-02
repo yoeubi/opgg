@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { ISummoner } from "../apis";
 import TierRank from "./TierRank";
 
 const ProfileContainer = styled.div`
@@ -100,38 +101,37 @@ const ProfileContainer = styled.div`
   }
 `;
 
-const Profile = () => {
+interface Props {
+  data: ISummoner;
+}
+
+const Profile = ({ data: { summoner } }: Props) => {
   return (
     <ProfileContainer>
       <div className="seasons">
-        <TierRank />
-        <TierRank />
-        <TierRank />
-        <TierRank />
-        <TierRank />
-        <TierRank />
-        <TierRank />
+        {summoner.previousTiers.map((tier) => (
+          <TierRank {...tier} />
+        ))}
       </div>
       <div className="profile">
         <div className="icon">
-          <img
-            className="img"
-            src="https://opgg-static.akamaized.net/images/profile_icons/profileIcon1625.jpg"
-            alt=""
-          />
+          <img className="img" src={summoner.profileImageUrl} alt="profile" />
           <img
             className="img tier"
-            src="https://opgg-static.akamaized.net/images/borders2/challenger.png"
-            alt=""
+            src={summoner.profileBorderImageUrl}
+            alt="border"
           />
           <div className="level-container">
             <div className="background" />
-            <div className="level">32</div>
+            <div className="level">{summoner.level}</div>
           </div>
         </div>
         <div className="info">
-          <div className="name">플레이어아이디</div>
-          <div className="rank">레더 랭킹 363,499위 (상위 40.7%)</div>
+          <div className="name">{summoner.name}</div>
+          <div className="rank">
+            레더 랭킹 {summoner.ladderRank.rank}위 (상위{" "}
+            {summoner.ladderRank.rankPercentOfTop}%)
+          </div>
         </div>
       </div>
     </ProfileContainer>

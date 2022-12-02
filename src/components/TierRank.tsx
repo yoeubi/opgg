@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { IPreviousTiers } from "../apis";
 
 const TierRankContainer = styled.span`
   height: 20px;
@@ -19,11 +20,11 @@ const TierRankContainer = styled.span`
   }
 `;
 
-const TierRank = () => {
+const TierRank = ({ season, tier }: IPreviousTiers) => {
   return (
     <TierRankContainer>
-      <span className="season">S3</span>
-      &nbsp;Bronze
+      <span className="season">S{season}</span>
+      &nbsp;{tier}
     </TierRankContainer>
   );
 };
