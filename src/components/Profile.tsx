@@ -102,7 +102,14 @@ const Profile = ({ data: { summoner } }: Props) => {
           />
           <div className="level-container">
             <div className="background" />
-            <div className="level">{summoner.level}</div>
+            <Typography
+              className="level"
+              fontFamily="Helvetica"
+              fontSize="14px"
+              color="#eabd56"
+            >
+              {summoner.level}
+            </Typography>
           </div>
         </div>
         <div className="info">
