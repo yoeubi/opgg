@@ -1,6 +1,9 @@
 import styled from "styled-components";
+import { IChampions, IRecentWinRate } from "../apis";
+import { calcKDA, calcWinRate } from "../utils";
+import Typography from "./Typography";
 
-const WinRateContainer = styled.div`
+const ChampionWinRateContainer = styled.div`
   padding: 4px 15px;
   display: flex;
   gap: 10px;
@@ -15,71 +18,90 @@ const WinRateContainer = styled.div`
   .contents {
     display: flex;
     text-align: start;
+    justify-content: space-between;
     align-items: center;
-    gap: 21px;
     flex-grow: 1;
-    div:first-child {
-      flex-grow: 1;
+  }
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    &:nth-of-type(1) {
+      text-align: start;
+      width: 66px;
     }
-  }
-  .title {
-    font-family: Helvetica;
-    font-size: 13px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    color: #5e5e5e;
-    margin-bottom: 3px;
-  }
-  .text-style-13 {
-    font-family: Helvetica;
-    font-size: 11px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    color: #879292;
+    &:nth-of-type(n + 2) {
+      text-align: center;
+    }
   }
 `;
 
-const ChampionWinRate = () => {
+const ChampionWinRate = ({
+  imageUrl,
+  name,
+  cs,
+  games,
+  wins,
+  losses,
+  kills,
+  assists,
+  deaths,
+}: IChampions) => {
+  const winRate = calcWinRate(wins, losses);
+  const kda = calcKDA(kills, assists, deaths);
+  const kdaNumber = parseFloat(kda);
+  const kdaColor =
+    kdaNumber >= 5
+      ? "#e19205"
+      : kdaNumber >= 4
+      ? "#1f8ecd"
+      : kdaNumber >= 3
+      ? "#2daf7f"
+      : "#5e5e5e";
+  const winRateColor = winRate >= 60 ? " #c6443e" : "#5e5e5e";
   return (
-    <WinRateContainer>
-      <img
-        src="https://opgg-static.akamaized.net/images/lol/champion/Lucian.png?image=w_30&v=1"
-        alt=""
-      />
+    <ChampionWinRateContainer>
+      <img src={imageUrl} alt={name} />
       <div className="contents">
-        <div>
-          <div className="title">신지드</div>
-          <div className="text-style-13">CS 67.8 (2.4)</div>
+        <div className="item">
+          <Typography fontSize="13px" fontWeight="bold" color="#5e5e5e">
+            {name}
+          </Typography>
+          <Typography fontFamily="Helvetica" fontSize="11px" color="#879292">
+            CS {cs}
+          </Typography>
         </div>
-        <div>
-          <div className="title">2.47:1 평점</div>
-          <div className="text-style-13">6.6 / 3.0 / 6.8</div>
+        <div className="item">
+          <Typography fontSize="13px" fontWeight="bold" color={kdaColor}>
+            {kda}:1 평점
+          </Typography>
+          <Typography fontFamily="Helvetica" fontSize="11px" color="#879292">
+            {kills} / {assists} / {deaths}
+          </Typography>
         </div>
-        <div>
-          <div className="title">69%</div>
-          <div className="text-style-13">35게임</div>
+        <div className="item">
+          <Typography fontSize="13px" fontWeight="bold" color={winRateColor}>
+            {winRate}%
+          </Typography>
+          <Typography fontFamily="Helvetica" fontSize="11px" color="#879292">
+            {games}게임
+          </Typography>
         </div>
       </div>
-    </WinRateContainer>
+    </ChampionWinRateContainer>
   );
 };
 
 const RankWinRateContainer = styled.div`
-  padding: 4px 15px;
+  padding: 8px 15px;
   display: flex;
   gap: 10px;
   & ~ & {
     border-top: solid 1px #cdd2d2;
   }
   img {
-    width: 45px;
-    height: 45px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
   }
   .contents {
@@ -90,15 +112,6 @@ const RankWinRateContainer = styled.div`
     flex-grow: 1;
   }
   .title {
-    font-family: Helvetica;
-    font-size: 13px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    color: #5e5e5e;
-    margin-bottom: 3px;
     flex-grow: 1;
   }
   .chart {
@@ -110,31 +123,45 @@ const RankWinRateContainer = styled.div`
     padding: 0 4px;
     border-radius: 4px;
     background: linear-gradient(to left, #1f8ecd 50%, #ee5a52 50%);
-    font-family: Helvetica;
-    font-size: 12px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    text-align: center;
-    color: #fff;
   }
 `;
 
-export const RankWinRate = () => {
+export const RecentWinRate = ({
+  imageUrl,
+  name,
+  wins,
+  losses,
+}: IRecentWinRate) => {
+  const winRate = calcWinRate(wins, losses);
   return (
     <RankWinRateContainer>
-      <img
-        src="https://opgg-static.akamaized.net/images/lol/champion/Lucian.png?image=w_30&v=1"
-        alt=""
-      />
+      <img src={imageUrl} alt={name} />
       <div className="contents">
-        <div className="title">신지드</div>
-        <div className="title">69%</div>
+        <Typography
+          className="title"
+          fontSize="13px"
+          fontWeight="bold"
+          color="#5e5e5e"
+        >
+          {name}
+        </Typography>
+        <Typography
+          fontSize="13px"
+          fontFamily="Helvetica"
+          fontWeight="bold"
+          color="#879292"
+        >
+          {winRate}%
+        </Typography>
         <div className="chart">
-          <div className="win">4승</div>
-          <div className="lose">11패</div>
+          <Typography fontFamily="Helvetica" fontWeight="bold" color="#fff">
+            {wins}
+            <Typography as="span">승</Typography>
+          </Typography>
+          <Typography fontFamily="Helvetica" fontWeight="bold" color="#fff">
+            {losses}
+            <Typography as="span">패</Typography>
+          </Typography>
         </div>
       </div>
     </RankWinRateContainer>

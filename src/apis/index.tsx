@@ -64,6 +64,35 @@ export function getMatchesAPI() {
   return fetch(`${HOST}/summoner/kaste2a/matches`).then((res) => res.json());
 }
 
-export function getMostInfoAPI() {
+export interface IChampions {
+  assists: number;
+  cs: number;
+  deaths: number;
+  games: number;
+  id: number;
+  imageUrl: string;
+  key: string;
+  kills: number;
+  losses: number;
+  name: string;
+  rank: number;
+  wins: number;
+}
+
+export interface IRecentWinRate {
+  id: 0;
+  imageUrl: "string";
+  key: "string";
+  losses: 0;
+  name: "string";
+  wins: 0;
+}
+
+export interface IMostInfo {
+  champions: IChampions[];
+  recentWinRate: IRecentWinRate[];
+}
+
+export function getMostInfoAPI(): Promise<IMostInfo> {
   return fetch(`${HOST}/summoner/kaste2a/mostInfo`).then((res) => res.json());
 }
