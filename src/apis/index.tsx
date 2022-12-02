@@ -48,7 +48,7 @@ export interface ISummoner {
   };
 }
 
-export function getSummonerAPI(name: string): Promise<Summoner> {
+export function getSummonerAPI(name: string): Promise<ISummoner> {
   return fetch(`${HOST}/summoner/${name}`).then((res) => res.json());
 }
 
