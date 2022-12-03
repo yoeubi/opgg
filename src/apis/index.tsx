@@ -81,10 +81,10 @@ export interface IChampions {
 
 export interface IRecentWinRate {
   id: 0;
-  imageUrl: "string";
-  key: "string";
+  imageUrl: string;
+  key: string;
   losses: 0;
-  name: "string";
+  name: string;
   wins: 0;
 }
 
