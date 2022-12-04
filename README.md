@@ -1,46 +1,30 @@
-# Getting Started with Create React App
+# Get Started
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+```bash
+npm i
+npm start
+```
 
-## Available Scripts
+## 구조
 
-In the project directory, you can run:
+폴더별로 각 권한과 책임으로 분리했습니다.
 
-### `npm start`
+```
+src
+-- apis
+-- components
+-- utils
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 지원사유
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+평소에도 OPGG라는 서비스를 많이 사용해보았으며 제가 자주 사용하는 서비스에 같이 개발하고 싶어서 지원하게 되었습니다.
+제가 갑자기 몸이 안좋아져서 과제에 집중하기 어려웠지만 최대한 할수 있는 만큼 진행하였습니다.
 
-### `npm test`
+## 지원 직무에 적합하다고 생각하는 이유
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. 프로젝트 세팅부터 배포까지 이르는 프로세스를 여러번 경험했습니다.
+2. 또한 해당 프로젝트를 전담개발하였으며 그 안에서 의사결정들을 협의, 조율하며 개발했습니다.
+3. React, Nextjs, SPA, SSR 등으로 개발경험이 있습니다.
+4. 평소에 LCK를 관람하고 있습니다.
+5. SEO를 개선한 경험이 있습니다.
