@@ -1,12 +1,47 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Divider from "./Divider";
 import Typography from "./Typography";
 import ward from "../assets/icon-ward-blue.svg";
+import { getMatchDetailAPI, IGame, ITeam } from "../apis";
+import { useEffect, useState } from "react";
+import { getChampionName, getDistance } from "../utils";
+import { getTime } from "date-fns";
 
-const GameContainer = styled.div`
+const state = {
+  win: css`
+    border: solid 1px #a1b8cd;
+    background-color: #b0ceea;
+  `,
+  lose: css`
+    border: solid 1px #c0aba8;
+    background-color: #d6b5b2;
+  `,
+  renew: css`
+    border: solid 1px #a7a7a7;
+    background-color: #b6b6b6;
+  `,
+};
+
+const moreState = {
+  win: css`
+    border: solid 1px #549dc7;
+    background-color: #7fb0e1;
+  `,
+  lose: css`
+    border: solid 1px #c8817c;
+    background-color: #e89c95;
+  `,
+  renew: css`
+    border: solid 1px #999;
+    background-color: #999999;
+  `,
+};
+
+const GameContainer = styled.div<{ state: "win" | "lose" | "renew" }>`
   display: flex;
   height: 96px;
   background-color: #d6b5b2;
+  ${(props) => state[props.state]}
   .result {
     display: flex;
     flex-direction: column;
@@ -53,6 +88,7 @@ const GameContainer = styled.div`
     flex-direction: column;
     text-align: center;
     gap: 6px;
+    flex-grow: 1;
   }
   .stats {
     display: flex;
@@ -60,11 +96,12 @@ const GameContainer = styled.div`
     gap: 6px;
     padding-top: 13px;
     text-align: center;
+    flex-grow: 1;
   }
   .game {
     padding: 11px;
     border: solid 1px #c0aba8;
-
+    flex-grow: 1;
     display: flex;
     gap: 14px;
     .type {
@@ -72,6 +109,7 @@ const GameContainer = styled.div`
     }
   }
   .teams {
+    width: 155px;
     display: flex;
     gap: 13px;
     padding: 4px 0;
@@ -84,6 +122,17 @@ const GameContainer = styled.div`
   .items {
     width: 94px;
     text-align: center;
+    .empty {
+      width: 22px;
+      height: 22px;
+      border-radius: 2px;
+      background-color: ${(props) =>
+        props.state === "renew"
+          ? "#979797"
+          : props.state === "win"
+          ? "#7aa5c3"
+          : "#cb9e9a"};
+    }
     .icons {
       display: flex;
       gap: 2px;
@@ -121,11 +170,10 @@ const GameContainer = styled.div`
   }
   .more {
     height: 100%;
-    border: solid 1px #c8817c;
-    background-color: #e89c95;
+    ${(props) => moreState[props.state]}
     display: flex;
     align-items: flex-end;
-    padding: 8px;
+    padding: 4px;
   }
   .kill-streak {
     display: flex;
@@ -146,87 +194,25 @@ const GameContainer = styled.div`
   }
 `;
 
-const Game = () => {
-  const players = [
-    {
-      champion: {
-        imageUrl:
-          "https://opgg-static.akamaized.net/images/lol/champion/Galio.png",
-        level: 20,
-      },
-      summonerId: "2593315",
-      summonerName: "kaste2a",
-    },
-    {
-      champion: {
-        imageUrl:
-          "https://opgg-static.akamaized.net/images/lol/champion/Anivia.png",
-        level: 31,
-      },
-      summonerId: "1861611",
-      summonerName: "모두모두행복하길",
-    },
-    {
-      champion: {
-        imageUrl:
-          "https://opgg-static.akamaized.net/images/lol/champion/Malzahar.png",
-        level: 6,
-      },
-      summonerId: "1228887",
-      summonerName: "HLE Viper",
-    },
-    {
-      champion: {
-        imageUrl:
-          "https://opgg-static.akamaized.net/images/lol/champion/Anivia.png",
-        level: 31,
-      },
-      summonerId: "3258578",
-      summonerName: "10k EGO",
-    },
-    {
-      champion: {
-        imageUrl:
-          "https://opgg-static.akamaized.net/images/lol/champion/Viktor.png",
-        level: 11,
-      },
-      summonerId: "2632082",
-      summonerName: "knightzz",
-    },
-  ];
-  const items = [
-    {
-      imageUrl: "https://opgg-static.akamaized.net/images/lol/item/3198.png",
-    },
-    {
-      imageUrl: "https://opgg-static.akamaized.net/images/lol/item/3020.png",
-    },
-    {
-      imageUrl: "https://opgg-static.akamaized.net/images/lol/item/3198.png",
-    },
-    {
-      imageUrl: "https://opgg-static.akamaized.net/images/lol/item/1026.png",
-    },
-    {
-      imageUrl: "https://opgg-static.akamaized.net/images/lol/item/3340.png",
-    },
-  ];
-  const picks = [
-    "https://opgg-static.akamaized.net/images/lol/perk/8229.png",
-    "https://opgg-static.akamaized.net/images/lol/perkStyle/8300.png",
-  ];
-  const spells = [
-    {
-      imageUrl:
-        "https://opgg-static.akamaized.net/images/lol/spell/SummonerTeleport.png",
-    },
-    {
-      imageUrl:
-        "https://opgg-static.akamaized.net/images/lol/spell/SummonerFlash.png",
-    },
-  ];
+const Game = ({
+  champion,
+  spells,
+  gameId,
+  items,
+  peak,
+  gameType,
+  gameLength,
+  isWin,
+  needRenew,
+  createDate,
+  stats,
+}: IGame) => {
+  const [teams, setTeams] = useState<ITeam[]>();
+  useEffect(() => {
+    getMatchDetailAPI(gameId).then((res) => setTeams(res.teams));
+  }, []);
   return (
-    <GameContainer>
+    <GameContainer state={needRenew ? "renew" : isWin ? "win" : "lose"}>
       <div className="game">
         <div className="result">
           <Typography
@@ -235,66 +221,75 @@ const Game = () => {
             color="#555"
             className="type"
           >
-            솔랭
+            {gameType}
           </Typography>
-          <Typography fontSize="11px">하루 전</Typography>
+          <Typography fontSize="11px">{getDistance(createDate)}</Typography>
           <Divider />
           <Typography fontSize="11px" fontWeight="bold">
-            패배
+            {needRenew ? "다시하기" : isWin ? "승리" : "패배"}
           </Typography>
-          <Typography fontSize="11px">15분 23초</Typography>
+          <Typography fontSize="11px">{getTime(gameLength)}</Typography>
         </div>
         <div className="champion">
           <div className="info">
-            <img
-              className="icon"
-              src="https://opgg-static.akamaized.net/images/lol/champion/Viktor.png"
-            />
+            <img className="icon" src={champion.imageUrl} alt="" />
             <div className="spells">
               {spells.map((spell) => (
-                <img src={spell.imageUrl} />
+                <img src={spell.imageUrl} alt={spell.imageUrl} />
               ))}
             </div>
             <div className="picks">
-              {picks.map((pick) => (
-                <img src={pick} />
+              {peak.map((pick) => (
+                <img src={pick} alt="" />
               ))}
             </div>
           </div>
-          <Typography fontSize="11px">Viktor</Typography>
+          <Typography fontSize="11px">
+            {getChampionName(champion.imageUrl)}
+          </Typography>
         </div>
         <div className="kda">
           <Typography fontFamily="Helvetica" fontSize="15px" color="#555e5e">
-            2 / 2 / 2
+            {stats.general.kill} / {stats.general.assist} /{" "}
+            {stats.general.death}
           </Typography>
           <Typography fontFamily="Helvetica" fontSize="11px" color="#555e5e">
-            1.50: 1 평점
+            {stats.general.kdaString} 평점
           </Typography>
           <div className="kill-streak">
-            <Typography className="kill" fontSize="10px" color="#fff">
-              트리플 킬
-            </Typography>
-            <Typography className="kill" fontSize="10px" color="#fff">
-              트리플 킬
-            </Typography>
+            {stats.general.largestMultiKillString && (
+              <Typography className="kill" fontSize="10px" color="#fff">
+                {stats.general.largestMultiKillString}
+              </Typography>
+            )}
+            {stats.general.opScoreBadge && (
+              <Typography className="kill" fontSize="10px" color="#fff">
+                {stats.general.opScoreBadge}
+              </Typography>
+            )}
           </div>
         </div>
         <div className="stats">
           <Typography fontSize="11px" color="#555e5e">
-            레벨9
+            레벨 {champion.level}
           </Typography>
           <Typography fontSize="11px" color="#555e5e">
-            20 (1.3) CS
+            {stats.general.cs} ({stats.general.csPerMin}) CS
           </Typography>
           <Typography fontSize="11px" color="#555e5e">
-            킬관여 38%
+            킬관여 {stats.general.contributionForKillRate}
           </Typography>
         </div>
         <div className="items">
           <div className="icons">
-            {items.map((item) => (
-              <img src={item.imageUrl} alt="" />
-            ))}
+            <>
+              {items.map((item) => (
+                <img src={item.imageUrl} alt="" />
+              ))}
+              {Array.from({ length: 8 - items.length }).fill(
+                <div className="empty" />
+              )}
+            </>
           </div>
           <div className="ward">
             <img src={ward} />
@@ -303,22 +298,16 @@ const Game = () => {
         </div>
       </div>
       <div className="teams">
-        <div className="players">
-          {players.map((player) => (
-            <div className="player">
-              <img src={player.champion.imageUrl} alt={player.summonerName} />
-              <div className="name">{player.summonerName}</div>
-            </div>
-          ))}
-        </div>
-        <div className="players">
-          {players.map((player) => (
-            <div className="player">
-              <img src={player.champion.imageUrl} alt={player.summonerName} />
-              <div className="name">{player.summonerName}</div>
-            </div>
-          ))}
-        </div>
+        {teams?.map((team) => (
+          <div className="players">
+            {team.players.map((player) => (
+              <div className="player">
+                <img src={player.champion.imageUrl} alt={player.summonerName} />
+                <div className="name">{player.summonerName}</div>
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
       <button className="more">
         <img

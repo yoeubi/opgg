@@ -1,3 +1,5 @@
+import { formatDistanceToNowStrict } from "date-fns";
+
 export function calcWinRate(wins: number, losses: number) {
   const winrate = Math.floor((wins / (wins + losses)) * 100);
   return winrate;
@@ -44,4 +46,17 @@ export function getSearchOnLocal() {
     return JSON.parse(saved);
   }
   return null;
+}
+
+export function getDistance(date: number) {
+  return formatDistanceToNowStrict(new Date(date));
+}
+
+export function getTime(date: number) {
+  const second = date % 60;
+  const min = Math.floor(date / 60);
+  const hour = Math.floor(min / 60);
+  return `${hour ? hour + "시" : ""}${min ? min + "분" : ""}${
+    second ? second + "초" : ""
+  }`;
 }
