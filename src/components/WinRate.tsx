@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { IChampions, IRecentWinRate } from "../apis";
-import { calcKDA, calcWinRate } from "../utils";
+import { calcKDA, calcWinRate, getKDAColor, getWinRateColor } from "../utils";
 import Typography from "./Typography";
 
 const ChampionWinRateContainer = styled.div`
@@ -52,15 +52,6 @@ const ChampionWinRate = ({
   const winRate = calcWinRate(wins, losses);
   const kda = calcKDA(kills, assists, deaths);
   const kdaNumber = parseFloat(kda);
-  const kdaColor =
-    kdaNumber >= 5
-      ? "#e19205"
-      : kdaNumber >= 4
-      ? "#1f8ecd"
-      : kdaNumber >= 3
-      ? "#2daf7f"
-      : "#5e5e5e";
-  const winRateColor = winRate >= 60 ? " #c6443e" : "#5e5e5e";
   return (
     <ChampionWinRateContainer>
       <img src={imageUrl} alt={name} />
@@ -74,7 +65,11 @@ const ChampionWinRate = ({
           </Typography>
         </div>
         <div className="item">
-          <Typography fontSize="13px" fontWeight="bold" color={kdaColor}>
+          <Typography
+            fontSize="13px"
+            fontWeight="bold"
+            color={getKDAColor(kdaNumber)}
+          >
             {kda}:1 평점
           </Typography>
           <Typography fontFamily="Helvetica" fontSize="11px" color="#879292">
@@ -82,7 +77,11 @@ const ChampionWinRate = ({
           </Typography>
         </div>
         <div className="item">
-          <Typography fontSize="13px" fontWeight="bold" color={winRateColor}>
+          <Typography
+            fontSize="13px"
+            fontWeight="bold"
+            color={getWinRateColor(winRate)}
+          >
             {winRate}%
           </Typography>
           <Typography fontFamily="Helvetica" fontSize="11px" color="#879292">

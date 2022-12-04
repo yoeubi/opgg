@@ -1,10 +1,14 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { IMatch } from "../apis";
 import adcIcon from "../assets/icon-mostposition-adc.svg";
 import jngIcon from "../assets/icon-mostposition-jng.svg";
 import midIcon from "../assets/icon-mostposition-mid.svg";
-import subIcon from "../assets/icon-mostposition-sub.svg";
+import supIcon from "../assets/icon-mostposition-sup.svg";
 import topIcon from "../assets/icon-mostposition-top.svg";
+import empty from "../assets/group.svg";
+import { calcKDA, calcWinRate, getKDAColor, getWinRateColor } from "../utils";
+import PieChart from "./Chart/PieChart";
 import Divider from "./Divider";
 import Typography from "./Typography";
 
@@ -46,42 +50,25 @@ const PanelContainer = styled.div`
     height: 158px;
     display: flex;
     .stats {
-      padding: 16px 35px 24px 24px;
+      width: 276px;
       .title {
-        margin-bottom: 14px;
+        padding: 16px 0 14px 33px;
       }
       .info {
         display: flex;
-        gap: 35px;
         align-items: center;
         text-align: center;
+        padding-left: 24px;
+        .kdas {
+          flex-grow: 1;
+        }
         .kda {
           margin-bottom: 6px;
         }
       }
-      .chart {
-        position: relative;
-        width: 90px;
-        height: 90px;
-        border-radius: 50%;
-        background: conic-gradient(red 30%, blue 0 70%);
-        &::before {
-          content: "55%";
-          background-color: #ededed;
-          position: absolute;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 64px;
-          height: 64px;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          border-radius: 50%;
-        }
-      }
     }
     .champions {
+      width: 228px;
       padding: 16px;
       img {
         width: 34px;
@@ -93,6 +80,7 @@ const PanelContainer = styled.div`
       }
     }
     .positions {
+      width: 184px;
       padding: 16px;
       .title {
         margin-bottom: 20px;
@@ -111,16 +99,62 @@ const PanelContainer = styled.div`
       color: #333;
       margin-bottom: 3px;
     }
+    &.empty {
+      align-items: center;
+      .name {
+        margin-bottom: 0;
+        font-size: 11px;
+        color: #999;
+      }
+    }
   }
 `;
 
 type Active = "solo" | "free" | null;
 
-const Panel = () => {
+function getPositionIcon(position: string) {
+  const icons = {
+    TOP: topIcon,
+    JNG: jngIcon,
+    MID: midIcon,
+    ADC: adcIcon,
+    SUP: supIcon,
+  };
+  return icons[position as keyof typeof icons];
+}
+function getPosition(position: string) {
+  const icons = {
+    TOP: "탑",
+    JNG: "정글",
+    MID: "미드",
+    ADC: "원딜",
+    SUP: "서폿",
+  };
+  return icons[position as keyof typeof icons];
+}
+
+function EmptyChampion() {
+  return (
+    <div className="item empty">
+      <img src={empty} alt="" />
+      <div className="description">
+        <div className="name">챔피언 정보가 없습니다</div>
+      </div>
+    </div>
+  );
+}
+
+const Panel = ({ summary, champions, positions }: IMatch) => {
   const [active, setActive] = useState<Active>(null);
   const onClick = (type: Active) => {
     setActive(type);
   };
+  const totalGameCount = positions[0].games + positions[1].games;
+  const mainPositionRate = (positions[0].games / totalGameCount) * 100;
+  const subPositionRate = (positions[1].games / totalGameCount) * 100;
+  const kda = calcKDA(summary.kills, summary.assists, summary.deaths);
+  const parsedKDA = parseFloat(kda);
+  const winRate = calcWinRate(summary.wins, summary.losses);
   return (
     <PanelContainer>
       <div className="tap">
@@ -151,80 +185,75 @@ const Panel = () => {
             fontSize="12px"
             color="#666"
           >
-            20전 11승 9패
+            {summary.wins + summary.losses}전 {summary.wins}승 {summary.losses}
+            패
           </Typography>
           <div className="info">
-            <div className="chart" />
-            <div>
+            <PieChart wins={summary.wins} losses={summary.losses} />
+            <div className="kdas">
               <Typography
                 className="kda"
                 fontFamily="Helvetica"
                 fontSize="11px"
                 color="#333"
               >
-                25.9 / 15.8 / 14.1
+                {summary.kills} /
+                <span style={{ color: "#c6443e" }}>{summary.assists}</span>/{" "}
+                {summary.deaths}
               </Typography>
-              <Typography
-                fontFamily="Helvetica"
-                fontSize="16px"
-                color="#c6443e"
-              >
-                3.45:1 (58%)
+              <Typography fontFamily="Helvetica" fontSize="16px">
+                <span style={{ color: getKDAColor(parsedKDA) }}>{kda}:1</span>
+                &nbsp;
+                <span style={{ color: getWinRateColor(winRate) }}>
+                  ({winRate}
+                  %)
+                </span>
               </Typography>
             </div>
           </div>
         </div>
         <Divider type="vertical" />
         <div className="champions">
-          <div className="item">
-            <img src="https://opgg-static.akamaized.net/images/lol/champion/Lucian.png?image=w_30&v=1" />
-            <div className="description">
-              <div className="name">룰루</div>
-              <Typography fontSize="11px">
-                70% (7승 3패) | 13.01 평점
-              </Typography>
-            </div>
-          </div>
-          <div className="item">
-            <img src="https://opgg-static.akamaized.net/images/lol/champion/Lucian.png?image=w_30&v=1" />
-            <div className="description">
-              <div className="name">룰루</div>
-              <Typography fontSize="11px">
-                70% (7승 3패) | 13.01 평점
-              </Typography>
-            </div>
-          </div>
-          <div className="item">
-            <img src="https://opgg-static.akamaized.net/images/lol/champion/Lucian.png?image=w_30&v=1" />
-            <div className="description">
-              <div className="name">룰루</div>
-              <Typography fontSize="11px">
-                70% (7승 3패) | 13.01 평점
-              </Typography>
-            </div>
-          </div>
+          <>
+            {champions.map((champion) => (
+              <div className="item">
+                <img src={champion.imageUrl} alt={champion.name} />
+                <div className="description">
+                  <div className="name">{champion.name}</div>
+                  <Typography fontSize="11px">
+                    {calcWinRate(champion.wins, champion.losses)}% (
+                    {champion.wins}승 {champion.losses}패) |{" "}
+                    {calcKDA(champion.kills, champion.assists, champion.deaths)}{" "}
+                    평점
+                  </Typography>
+                </div>
+              </div>
+            ))}
+            {Array.from({ length: 3 - champions.length }).fill(
+              <EmptyChampion />
+            )}
+          </>
         </div>
         <Divider type="vertical" />
         <div className="positions">
           <div className="title">선호 포지션 (랭크)</div>
-          <div className="item">
-            <img src={topIcon} />
-            <div className="description">
-              <div className="name">룰루</div>
-              <Typography fontSize="11px">
-                70% (7승 3패) | 13.01 평점
-              </Typography>
+          {positions.map((position, index) => (
+            <div className="item" key={index}>
+              <img
+                src={getPositionIcon(position.position)}
+                alt={position.position}
+              />
+              <div className="description">
+                <div className="name">{getPosition(position.position)}</div>
+                <Typography fontSize="11px">
+                  <span style={{ color: "#1f8ecd" }}>
+                    {index === 0 ? mainPositionRate : subPositionRate}%
+                  </span>
+                  &nbsp;| 승률 {calcWinRate(position.wins, position.losses)}%
+                </Typography>
+              </div>
             </div>
-          </div>
-          <div className="item">
-            <img src={topIcon} />
-            <div className="description">
-              <div className="name">룰루</div>
-              <Typography fontSize="11px">
-                70% (7승 3패) | 13.01 평점
-              </Typography>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </PanelContainer>

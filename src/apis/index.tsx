@@ -60,7 +60,90 @@ export function getMatchDetailAPI() {
   );
 }
 
-export function getMatchesAPI() {
+export interface IMatch {
+  champions: {
+    id: number;
+    key: string;
+    name: string;
+    imageUrl: string;
+    games: number;
+    kills: number;
+    deaths: number;
+    assists: number;
+    wins: number;
+    losses: number;
+    cs: number;
+    rank: number;
+  }[];
+  games: [
+    {
+      champion: {
+        imageUrl: string;
+        level: number;
+      };
+      createDate: number;
+      gameId: string;
+      gameLength: number;
+      gameType: string;
+      isWin: true;
+      items: [
+        {
+          imageUrl: string;
+        }
+      ];
+      mapInfo: {
+        imageUrl: string;
+        mapId: number;
+      };
+      mmr: number;
+      needRenew: true;
+      peak: string[];
+      spells: [
+        {
+          imageUrl: string;
+        }
+      ];
+      stats: {
+        general: {
+          assist: number;
+          contributionForKillRate: string;
+          cs: number;
+          csPerMin: number;
+          death: number;
+          goldEarned: number;
+          kdaString: string;
+          kill: number;
+          largestMultiKillString: string;
+          opScoreBadge: string;
+          totalDamageDealtToChampions: number;
+        };
+        ward: {
+          sightWardsBought: number;
+          visionWardsBought: number;
+        };
+      };
+      summonerId: string;
+      summonerName: string;
+      tierRankShort: string;
+    }
+  ];
+  positions: {
+    games: number;
+    losses: number;
+    position: string;
+    positionName: string;
+    wins: number;
+  }[];
+  summary: {
+    assists: number;
+    deaths: number;
+    kills: number;
+    losses: number;
+    wins: number;
+  };
+}
+
+export function getMatchesAPI(): Promise<IMatch> {
   return fetch(`${HOST}/summoner/kaste2a/matches`).then((res) => res.json());
 }
 
@@ -80,12 +163,12 @@ export interface IChampions {
 }
 
 export interface IRecentWinRate {
-  id: 0;
+  id: number;
   imageUrl: string;
   key: string;
-  losses: 0;
+  losses: number;
   name: string;
-  wins: 0;
+  wins: number;
 }
 
 export interface IMostInfo {
