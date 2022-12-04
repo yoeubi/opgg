@@ -1,3 +1,4 @@
+import { ChangeEvent } from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import Input from "./Input";
@@ -11,10 +12,21 @@ const FormContainer = styled.form`
   display: inline-flex;
 `;
 
-const Form = () => {
+interface Props {
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: () => void;
+}
+
+const Form = ({ value, onChange, onSubmit }: Props) => {
   return (
-    <FormContainer>
-      <Input />
+    <FormContainer
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+    >
+      <Input value={value} onChange={onChange} />
       <Button />
       <RecentSearch />
     </FormContainer>

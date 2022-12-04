@@ -20,3 +20,9 @@ export function getKDAColor(kda: number) {
 export function getWinRateColor(winRate: number) {
   return winRate >= 60 ? " #c6443e" : "#5e5e5e";
 }
+
+export function getChampionName(img: string) {
+  const splited = img.split("/");
+  const [name] = splited[splited.length - 1].split(".");
+  return name;
+}

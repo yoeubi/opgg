@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import {
-  getMatchDetailAPI,
   getMatchesAPI,
   getMostInfoAPI,
   getSummonerAPI,
@@ -24,29 +23,49 @@ function App() {
   const [summoner, setSummoner] = useState<ISummoner>();
   const [mostInfo, setMostInfo] = useState<IMostInfo>();
   const [match, setMatch] = useState<IMatch>();
-  useEffect(() => {
-    getSummonerAPI("kaste2a").then((res) => {
-      console.log(res.summoner);
+  // useEffect(() => {
+  //   getSummonerAPI("kaste2a").then((res) => {
+  //     console.log(res.summoner);
 
-      setSummoner(res);
-    });
+  //     setSummoner(res);
+  //   });
 
-    getMatchesAPI().then((res) => {
-      console.log("match", res);
-      setMatch(res);
-    });
-    getMatchDetailAPI().then((res) => console.log(res));
+  //   getMatchesAPI("kaste2a").then((res) => {
+  //     console.log("match", res);
+  //     setMatch(res);
+  //   });
 
-    getMostInfoAPI().then((res) => {
-      console.log(res);
-      setMostInfo(res);
+  //   getMostInfoAPI("kaste2a").then((res) => {
+  //     console.log(res);
+  //     setMostInfo(res);
+  //   });
+  // }, []);
+
+  const [search, setSearch] = useState("");
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+  const onSubmit = () => {
+    Promise.all([
+      getSummonerAPI(search),
+      getMatchesAPI(search),
+      getMostInfoAPI(search),
+    ]).then(([summoner, matches, mostInfo]) => {
+      setSummoner(summoner);
+      setMatch(matches);
+      setMostInfo(mostInfo);
     });
-  }, []);
-  if (!summoner || !mostInfo || !match) return null;
+  };
+  if (!summoner || !mostInfo || !match)
+    return (
+      <Header>
+        <Form value={search} onChange={onChange} onSubmit={onSubmit} />
+      </Header>
+    );
   return (
     <div className="App">
       <Header>
-        <Form />
+        <Form value={search} onChange={onChange} onSubmit={onSubmit} />
       </Header>
       <Layout>
         <Profile data={summoner} />
@@ -64,7 +83,7 @@ function App() {
             <Panel {...match} />
             <GameList>
               {match.games.map((game, index) => (
-                <Game key={index} />
+                <Game key={index} {...game} />
               ))}
             </GameList>
           </RightLayout>

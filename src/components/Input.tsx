@@ -1,3 +1,4 @@
+import { ChangeEvent } from "react";
 import styled from "styled-components";
 
 const InputContainer = styled.input`
@@ -9,8 +10,19 @@ const InputContainer = styled.input`
   outline: none;
 `;
 
-const Input = () => {
-  return <InputContainer placeholder="소환사명,챔피언…" />;
+interface Props {
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+}
+
+const Input = ({ value, onChange }: Props) => {
+  return (
+    <InputContainer
+      placeholder="소환사명,챔피언…"
+      value={value}
+      onChange={onChange}
+    />
+  );
 };
 
 export default Input;
