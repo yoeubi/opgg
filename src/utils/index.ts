@@ -26,3 +26,22 @@ export function getChampionName(img: string) {
   const [name] = splited[splited.length - 1].split(".");
   return name;
 }
+
+export function setSearchOnLocal(search: string) {
+  const saved = window.localStorage.getItem("search");
+  const parsed = saved && (JSON.parse(saved) as string[]);
+  if (!parsed) {
+    window.localStorage.setItem("search", JSON.stringify([search]));
+  } else {
+    parsed.push(search);
+    window.localStorage.setItem("search", JSON.stringify(parsed));
+  }
+}
+
+export function getSearchOnLocal() {
+  const saved = window.localStorage.getItem("search");
+  if (saved) {
+    return JSON.parse(saved);
+  }
+  return null;
+}

@@ -1,5 +1,6 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import styled from "styled-components";
+import { getSearchOnLocal } from "../utils";
 import Button from "./Button";
 import Input from "./Input";
 import RecentSearch from "./RecentSearch";
@@ -15,10 +16,19 @@ const FormContainer = styled.form`
 interface Props {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: () => void;
+  onSubmit: (value?: string) => void;
 }
 
 const Form = ({ value, onChange, onSubmit }: Props) => {
+  const [click, setClick] = useState(false);
+  const onClick = () => {
+    setClick(!click);
+  };
+  const searchs = useMemo(() => getSearchOnLocal(), [click]);
+  const onSearch = (value: string) => {
+    onClick();
+    onSubmit(value);
+  };
   return (
     <FormContainer
       onSubmit={(e) => {
@@ -26,9 +36,11 @@ const Form = ({ value, onChange, onSubmit }: Props) => {
         onSubmit();
       }}
     >
-      <Input value={value} onChange={onChange} />
+      <Input value={value} onChange={onChange} onClick={onClick} />
       <Button />
-      <RecentSearch />
+      {click && searchs && (
+        <RecentSearch searchs={searchs} onSearch={onSearch} />
+      )}
     </FormContainer>
   );
 };

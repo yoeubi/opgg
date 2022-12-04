@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const RecentSearchContainer = styled.ul`
@@ -19,16 +18,18 @@ const RecentSearchContainer = styled.ul`
   }
 `;
 
-const RecentSearch = () => {
-  const [searchs, setSearchs] = useState<string[]>([]);
-  useEffect(() => {
-    const searchs = window.localStorage.getItem("search");
-    searchs && setSearchs(JSON.parse(searchs));
-  }, []);
+interface Props {
+  searchs: string[];
+  onSearch: (value: string) => void;
+}
+
+const RecentSearch = ({ searchs, onSearch }: Props) => {
   return (
     <RecentSearchContainer>
       {searchs.map((search, index) => (
-        <li key={index}>{search}</li>
+        <li key={index} onClick={() => onSearch(search)}>
+          {search}
+        </li>
       ))}
     </RecentSearchContainer>
   );

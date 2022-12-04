@@ -13,14 +13,16 @@ const InputContainer = styled.input`
 interface Props {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onClick: () => void;
 }
 
-const Input = ({ value, onChange }: Props) => {
+const Input = ({ value, onChange, onClick }: Props) => {
   return (
     <InputContainer
       placeholder="소환사명,챔피언…"
       value={value}
       onChange={onChange}
+      onClick={onClick}
     />
   );
 };

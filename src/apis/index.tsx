@@ -54,10 +54,78 @@ export function getSummonerAPI(name: string): Promise<ISummoner> {
   return fetch(`${HOST}/summoner/${name}`).then((res) => res.json());
 }
 
-export function getMatchDetailAPI() {
-  return fetch(`${HOST}/summoner/kaste2a/matchDetail/342909519`).then((res) =>
+export interface ITeam {
+  players: {
+    champion: {
+      imageUrl: string;
+      level: number;
+    };
+    summonerId: string;
+    summonerName: string;
+  }[];
+  teamId: number;
+}
+
+export interface IMatchDeatil {
+  gameId: string;
+  teams: ITeam[];
+}
+
+export function getMatchDetailAPI(gameId: string): Promise<IMatchDeatil> {
+  return fetch(`${HOST}/summoner/kaste2a/matchDetail/${gameId}`).then((res) =>
     res.json()
   );
+}
+
+export interface IGame {
+  champion: {
+    imageUrl: string;
+    level: number;
+  };
+  createDate: number;
+  gameId: string;
+  gameLength: number;
+  gameType: string;
+  isWin: true;
+  items: [
+    {
+      imageUrl: string;
+    }
+  ];
+  mapInfo: {
+    imageUrl: string;
+    mapId: number;
+  };
+  mmr: number;
+  needRenew: true;
+  peak: string[];
+  spells: [
+    {
+      imageUrl: string;
+    }
+  ];
+  stats: {
+    general: {
+      assist: number;
+      contributionForKillRate: string;
+      cs: number;
+      csPerMin: number;
+      death: number;
+      goldEarned: number;
+      kdaString: string;
+      kill: number;
+      largestMultiKillString: string;
+      opScoreBadge: string;
+      totalDamageDealtToChampions: number;
+    };
+    ward: {
+      sightWardsBought: number;
+      visionWardsBought: number;
+    };
+  };
+  summonerId: string;
+  summonerName: string;
+  tierRankShort: string;
 }
 
 export interface IMatch {
@@ -75,58 +143,7 @@ export interface IMatch {
     cs: number;
     rank: number;
   }[];
-  games: [
-    {
-      champion: {
-        imageUrl: string;
-        level: number;
-      };
-      createDate: number;
-      gameId: string;
-      gameLength: number;
-      gameType: string;
-      isWin: true;
-      items: [
-        {
-          imageUrl: string;
-        }
-      ];
-      mapInfo: {
-        imageUrl: string;
-        mapId: number;
-      };
-      mmr: number;
-      needRenew: true;
-      peak: string[];
-      spells: [
-        {
-          imageUrl: string;
-        }
-      ];
-      stats: {
-        general: {
-          assist: number;
-          contributionForKillRate: string;
-          cs: number;
-          csPerMin: number;
-          death: number;
-          goldEarned: number;
-          kdaString: string;
-          kill: number;
-          largestMultiKillString: string;
-          opScoreBadge: string;
-          totalDamageDealtToChampions: number;
-        };
-        ward: {
-          sightWardsBought: number;
-          visionWardsBought: number;
-        };
-      };
-      summonerId: string;
-      summonerName: string;
-      tierRankShort: string;
-    }
-  ];
+  games: IGame[];
   positions: {
     games: number;
     losses: number;
@@ -143,8 +160,8 @@ export interface IMatch {
   };
 }
 
-export function getMatchesAPI(): Promise<IMatch> {
-  return fetch(`${HOST}/summoner/kaste2a/matches`).then((res) => res.json());
+export function getMatchesAPI(name: string): Promise<IMatch> {
+  return fetch(`${HOST}/summoner/${name}/matches`).then((res) => res.json());
 }
 
 export interface IChampions {
@@ -176,6 +193,6 @@ export interface IMostInfo {
   recentWinRate: IRecentWinRate[];
 }
 
-export function getMostInfoAPI(): Promise<IMostInfo> {
-  return fetch(`${HOST}/summoner/kaste2a/mostInfo`).then((res) => res.json());
+export function getMostInfoAPI(name: string): Promise<IMostInfo> {
+  return fetch(`${HOST}/summoner/${name}/mostInfo`).then((res) => res.json());
 }

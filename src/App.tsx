@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import {
   getMatchesAPI,
   getMostInfoAPI,
@@ -18,6 +18,7 @@ import WinRateList from "./components/WinRateList";
 import Panel from "./components/Panel";
 import Game from "./components/Game";
 import GameList from "./components/GameList";
+import { setSearchOnLocal } from "./utils";
 
 function App() {
   const [summoner, setSummoner] = useState<ISummoner>();
@@ -45,11 +46,12 @@ function App() {
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
-  const onSubmit = () => {
+  const onSubmit = (value?: string) => {
+    !value && setSearchOnLocal(search);
     Promise.all([
-      getSummonerAPI(search),
-      getMatchesAPI(search),
-      getMostInfoAPI(search),
+      getSummonerAPI(value ? value : search),
+      getMatchesAPI(value ? value : search),
+      getMostInfoAPI(value ? value : search),
     ]).then(([summoner, matches, mostInfo]) => {
       setSummoner(summoner);
       setMatch(matches);
